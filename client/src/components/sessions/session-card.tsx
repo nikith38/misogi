@@ -167,52 +167,17 @@ export default function SessionCard({ session }: SessionCardProps) {
   };
 
   const handleJoinSession = () => {
-    // Log the session data for debugging
-    console.log('[JOIN MEETING] Session data:', {
-      id: session.id,
-      status: session.status,
-      meetingLink: session.meetingLink
-    });
+    // Log that we're joining the meeting
+    console.log('[JOIN MEETING] Joining meeting for session:', session.id);
     
-    // Get the meeting link from the session or use a hardcoded fallback
-    let meetingLink = session.meetingLink;
-    
-    // Check if the session has a valid meeting link
-    if (!meetingLink || meetingLink.trim() === '') {
-      console.warn('[JOIN MEETING] No meeting link available for session:', session.id);
-      
-      // Use a hardcoded fallback link from our collection
-      meetingLink = 'https://meet.google.com/abc-defg-hij';
-      console.log('[JOIN MEETING] Using fallback meeting link:', meetingLink);
-      
-      toast({
-        title: "Using default meeting link",
-        description: "Opening a default Google Meet link since no specific link was assigned.",
-      });
-    } else {
-      console.log('[JOIN MEETING] Using session meeting link:', meetingLink);
-    }
+    // Always use the specified Google Meet URL
+    const meetingLink = 'https://meet.google.com/ajv-jyxk-eak';
     
     try {
-      // Format the Google Meet URL correctly if needed
-      let formattedUrl = meetingLink.trim();
-      
-      // Make sure we have a proper URL format
-      if (!formattedUrl.startsWith('http')) {
-        if (formattedUrl.includes('meet.google.com')) {
-          formattedUrl = `https://${formattedUrl}`;
-        } else {
-          formattedUrl = `https://meet.google.com/${formattedUrl}`;
-        }
-      }
-      
-      // Remove any trailing or leading whitespace
-      formattedUrl = formattedUrl.replace(/\s+/g, '');
-      
-      console.log('[JOIN MEETING] Opening URL:', formattedUrl);
+      console.log('[JOIN MEETING] Opening URL:', meetingLink);
       
       // Open in a new tab
-      const newWindow = window.open(formattedUrl, "_blank");
+      const newWindow = window.open(meetingLink, "_blank");
       
       // Check if the window was successfully opened
       if (newWindow) {

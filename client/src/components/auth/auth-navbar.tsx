@@ -38,7 +38,7 @@ export function AuthNavbar({ activeTab, setActiveTab }: AuthNavbarProps) {
               className="text-white" 
               onClick={() => setActiveTab("register")}
             >
-              Sign Up
+              Get Started
             </Button>
           </div>
         </div>

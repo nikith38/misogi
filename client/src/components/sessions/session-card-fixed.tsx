@@ -129,35 +129,41 @@ export default function SessionCard({ session }: SessionCardProps) {
   };
 
   const handleJoinSession = () => {
-    if (!session.meetingLink) {
+    // Log that we're joining the meeting
+    console.log('[JOIN MEETING] Joining meeting for session:', session.id);
+    
+    // Always use the specified Google Meet URL
+    const meetingLink = 'https://meet.google.com/ajv-jyxk-eak';
+    
+    try {
+      console.log('[JOIN MEETING] Opening URL:', meetingLink);
+      
+      // Open in a new tab
+      const newWindow = window.open(meetingLink, "_blank");
+      
+      // Check if the window was successfully opened
+      if (newWindow) {
+        toast({
+          title: "Joining meeting",
+          description: "Opening Google Meet in a new tab...",
+        });
+      } else {
+        // If window.open returns null, it might have been blocked by a popup blocker
+        console.error('[JOIN MEETING] Popup blocked');
+        toast({
+          title: "Popup blocked",
+          description: "Please allow popups for this site to join meetings.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('[JOIN MEETING] Error opening meeting link:', error);
       toast({
-        title: "No meeting link available",
-        description: "This session doesn't have a Google Meet link yet.",
+        title: "Error joining meeting",
+        description: "There was a problem opening the meeting link.",
         variant: "destructive"
       });
-      return;
     }
-    
-    // Debug log for the meeting link
-    console.log('Attempting to join meeting with link:', session.meetingLink);
-    
-    // Format the Google Meet URL correctly if needed
-    let meetingUrl = session.meetingLink.trim();
-    if (!meetingUrl.startsWith('http')) {
-      if (meetingUrl.includes('meet.google.com')) {
-        meetingUrl = `https://${meetingUrl}`;
-      } else {
-        meetingUrl = `https://meet.google.com/${meetingUrl}`;
-      }
-    }
-    // Remove any trailing or leading whitespace
-    meetingUrl = meetingUrl.replace(/\s+/g, '');
-    // Open in a new tab
-    window.open(meetingUrl, "_blank");
-    toast({
-      title: "Joining meeting",
-      description: "Opening Google Meet in a new tab...",
-    });
   };
 
   const handleCancel = () => {

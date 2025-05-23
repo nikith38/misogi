@@ -31,9 +31,10 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
             <Logo />
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            <nav className="flex items-center space-x-1">
+          {/* Desktop Navigation - Right Aligned */}
+          <div className="hidden md:flex items-center justify-end flex-1 space-x-4">
+            {/* Navigation Links */}
+            <nav className="flex items-center space-x-1 mr-auto">
               <a
                 href="#features"
                 className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -53,15 +54,16 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
                 Testimonials
               </a>
             </nav>
-
-            <div className="flex items-center space-x-2 ml-4">
+            
+            {/* Theme Toggle and Get Started Button */}
+            <div className="flex items-center space-x-2">
               <ThemeToggle className="hover:scale-105 transition-transform" />
               
               {/* Sign Up Dropdown - Similar to Topmate */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="default" className="font-medium">
-                    Sign Up
+                    Get Started
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">

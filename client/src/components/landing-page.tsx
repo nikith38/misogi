@@ -28,6 +28,21 @@ export function LandingPage() {
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<"mentee" | "mentor">("mentee");
+  
+  // Sample data for autofill based on role selection
+  const menteeData = {
+    firstName: "Alex",
+    lastName: "Learner",
+    email: "alex.learner@example.com",
+    username: "alexlearner"
+  };
+  
+  const mentorData = {
+    firstName: "Sam",
+    lastName: "Expert",
+    email: "sam.expert@example.com",
+    username: "samexpert"
+  };
   const [formError, setFormError] = useState("");
   
   const { loginMutation, registerMutation } = useAuth();
@@ -327,14 +342,28 @@ export function LandingPage() {
                         <div className="grid grid-cols-2 gap-4 mt-2">
                           <div 
                             className={`border rounded-md p-4 text-center cursor-pointer transition-colors ${role === "mentee" ? "border-primary bg-primary/5" : "border-gray-300 hover:border-primary"}`}
-                            onClick={() => setRole("mentee")}
+                            onClick={() => {
+                              setRole("mentee");
+                              // Autofill form with mentee sample data
+                              setFirstName(menteeData.firstName);
+                              setLastName(menteeData.lastName);
+                              setEmail(menteeData.email);
+                              setUsername(menteeData.username);
+                            }}
                           >
                             <p className="font-medium">Mentee</p>
                             <p className="text-xs text-gray-500">Looking for guidance</p>
                           </div>
                           <div 
                             className={`border rounded-md p-4 text-center cursor-pointer transition-colors ${role === "mentor" ? "border-primary bg-primary/5" : "border-gray-300 hover:border-primary"}`}
-                            onClick={() => setRole("mentor")}
+                            onClick={() => {
+                              setRole("mentor");
+                              // Autofill form with mentor sample data
+                              setFirstName(mentorData.firstName);
+                              setLastName(mentorData.lastName);
+                              setEmail(mentorData.email);
+                              setUsername(mentorData.username);
+                            }}
                           >
                             <p className="font-medium">Mentor</p>
                             <p className="text-xs text-gray-500">Offering expertise</p>
