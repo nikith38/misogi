@@ -6,7 +6,7 @@ import ActivityFeed from "@/components/dashboard/activity-feed";
 import RecommendedMentors from "@/components/dashboard/recommended-mentors";
 import { cn, getStaggeredDelay } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
+import { DashboardCalendar } from "@/components/ui/dashboard-calendar";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
@@ -89,18 +89,12 @@ export default function MenteeDashboard() {
             )}
             style={{ transitionDelay: getStaggeredDelay(4) }}
           >
-            <Calendar 
-              title="Book a mentorship session"
-              subtitle="Schedule time with a mentor to help you grow"
-              buttonText="Book Now"
+            <DashboardCalendar 
+              title="Your Mentorship Calendar"
+              subtitle="Track your upcoming and completed sessions"
+              buttonText="Book New Session"
               onBookNowClick={handleBookNowClick}
-              mentorId={recommendedMentor?.id}
-              onSelectDate={(date) => {
-                if (recommendedMentor) {
-                  setSelectedMentorId(recommendedMentor.id);
-                  setShowBookingModal(true);
-                }
-              }}
+              menteeId={user?.id}
             />
           </div>
         </div>

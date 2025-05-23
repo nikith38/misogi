@@ -22,6 +22,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { apiRequest } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 
+// Custom styles for improved placeholder visibility
+const customStyles = `
+  .placeholder-enhanced::placeholder {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+    opacity: 1;
+  }
+  
+  .placeholder-enhanced:focus::placeholder {
+    opacity: 0.8;
+  }
+`;
+
 export default function FindMentors() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,6 +106,7 @@ export default function FindMentors() {
       <Helmet>
         <title>Find Mentors | MentorHub</title>
         <meta name="description" content="Browse and connect with professional mentors that match your career goals and interests." />
+        <style>{customStyles}</style>
       </Helmet>
 
       <div className="flex flex-col min-h-screen">
@@ -107,12 +122,12 @@ export default function FindMentors() {
                   Connect with experienced professionals who can guide you through your career journey.
                 </p>
                 
-                <div className="bg-white/10 backdrop-blur-sm p-1 rounded-lg flex flex-col sm:flex-row gap-2 max-w-2xl">
+                <div className="bg-white/15 backdrop-blur-sm p-1 rounded-lg flex flex-col sm:flex-row gap-2 max-w-2xl">
                   <div className="relative flex-grow">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-white/70" />
+                    <Search className="absolute left-3 top-3 h-5 w-5 text-white" />
                     <Input
                       placeholder="Search by name, expertise, or organization..."
-                      className="pl-10 h-12 bg-white/20 border-transparent placeholder-white/70 text-white w-full focus:bg-white/30 focus:border-white/30"
+                      className="pl-10 h-12 bg-white/25 border-transparent placeholder-white/90 text-white w-full focus:bg-white/30 focus:border-white/30 placeholder-enhanced"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
