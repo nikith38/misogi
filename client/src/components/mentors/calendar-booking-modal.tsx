@@ -220,41 +220,6 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/3 space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Session Types</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 rounded-md border border-border hover:border-primary/50 hover:bg-primary/5 cursor-pointer">
-                      <div>
-                        <h4 className="font-medium text-foreground">Quick Question</h4>
-                        <p className="text-sm text-muted-foreground">15 min</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-medium text-foreground">Free</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center p-3 rounded-md border border-border hover:border-primary/50 hover:bg-primary/5 cursor-pointer">
-                      <div>
-                        <h4 className="font-medium text-foreground">Career Guidance</h4>
-                        <p className="text-sm text-muted-foreground">30 min</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-medium text-foreground">$40</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center p-3 rounded-md border border-border hover:border-primary/50 hover:bg-primary/5 cursor-pointer">
-                      <div>
-                        <h4 className="font-medium text-foreground">Deep Dive</h4>
-                        <p className="text-sm text-muted-foreground">60 min</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-medium text-foreground">$75</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
                   <Label className="block text-sm font-medium mb-2">Session Topic</Label>
                   <Select value={topic} onValueChange={setTopic}>
                     <SelectTrigger>

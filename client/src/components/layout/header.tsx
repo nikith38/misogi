@@ -61,13 +61,6 @@ export default function Header() {
                 My Sessions
               </div>
             </Link>
-            <Link href="/book-session">
-              <div className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-all duration-200 ${location === '/book-session' 
-                ? 'bg-primary text-white shadow-[0_0_10px_rgba(99,102,241,0.5)]' 
-                : 'text-foreground/80 hover:text-primary hover:bg-primary/10'}`}>
-                Book Session
-              </div>
-            </Link>
 
             {user?.role === 'mentor' && (
               <Link href="/availability">

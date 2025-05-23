@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Calendar, Clock, ExternalLink, Star, Verified } from "lucide-react";
+import { Calendar, ExternalLink, Star, Verified } from "lucide-react";
 import CalendarBookingModal from "./calendar-booking-modal";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -50,13 +50,6 @@ export default function TopmateMentorCard({ mentor }: TopmateMentorCardProps) {
   const avgRating = reviewCount > 0 ? (feedback.reduce((sum: number, f: any) => sum + (f.rating || 0), 0) / reviewCount).toFixed(1) : "0";
   const rating = parseFloat(avgRating);
   
-  // Mock session types with pricing (in a real app, this would come from your database)
-  const sessionTypes = [
-    { name: "Quick Question", duration: "15 min", price: "Free" },
-    { name: "Career Guidance", duration: "30 min", price: "$40" },
-    { name: "Deep Dive", duration: "60 min", price: "$75" }
-  ];
-
   // Get next available slot (simplified)
   const getNextAvailableSlot = () => {
     if (!availability || availability.length === 0) {
@@ -171,28 +164,6 @@ export default function TopmateMentorCard({ mentor }: TopmateMentorCardProps) {
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <Calendar className="h-4 w-4 text-primary" />
                   <span>Next available: {getNextAvailableSlot()}</span>
-                </div>
-                
-                {/* Session types */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Session Types</h4>
-                  
-                  <div className="space-y-2">
-                    {sessionTypes.map((session, index) => (
-                      <div key={index} className="flex justify-between items-center p-3 rounded-md border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/80">
-                        <div>
-                          <h5 className="font-medium text-gray-900 dark:text-white">{session.name}</h5>
-                          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                            <Clock className="h-3.5 w-3.5 mr-1" />
-                            <span>{session.duration}</span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-medium text-gray-900 dark:text-white">{session.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
                 
                 {/* Testimonial preview */}
