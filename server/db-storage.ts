@@ -221,6 +221,15 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(sessions.date));
   }
 
+  async getSessionsForMentor(mentorId: number): Promise<Session[]> {
+    // Get all sessions for this mentor regardless of who is logged in
+    return await db
+      .select()
+      .from(sessions)
+      .where(eq(sessions.mentorId, mentorId))
+      .orderBy(desc(sessions.date));
+  }
+
   async getUpcomingSessions(userId: number, role: "mentor" | "mentee"): Promise<Session[]> {
     // Make sure to filter strictly by role - mentor or mentee
     const column = role === "mentor" ? sessions.mentorId : sessions.menteeId;

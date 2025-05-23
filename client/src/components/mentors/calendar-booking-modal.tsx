@@ -31,28 +31,33 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   
   // Fetch mentor's availability
-  const { data: availability } = useQuery({
+  const { data: availability, isLoading: availabilityLoading } = useQuery({
     queryKey: ["/api/mentors", mentor.id, "availability"],
     queryFn: async () => {
       const res = await apiRequest("GET", `/api/mentors/${mentor.id}/availability`);
-      return await res.json();
+      const data = await res.json();
+      console.log("Modal: Availability data:", data);
+      return data;
     },
     enabled: !!mentor.id && isOpen,
   });
 
   // Fetch mentor's sessions for the selected date
-  const { data: sessions } = useQuery({
-    queryKey: ["/api/sessions", mentor.id, selectedDate && format(selectedDate, "yyyy-MM-dd")],
+  const { data: sessions, isLoading: sessionsLoading } = useQuery({
+    queryKey: ["/api/sessions", mentor.id],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/sessions");
-      return await res.json();
+      const res = await apiRequest("GET", `/api/sessions?mentorId=${mentor.id}`);
+      const data = await res.json();
+      console.log("Modal: Sessions data:", data);
+      return data;
     },
-    enabled: !!mentor.id && !!selectedDate && isOpen,
+    enabled: !!mentor.id && isOpen,
   });
 
   // Helper to get day name from date
   const getDayName = (date: Date) => {
-    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][getDay(date)];
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return dayNames[getDay(date)];
   };
 
   // Helper to generate 30-minute intervals between two times ("HH:mm")
@@ -78,20 +83,73 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
       return;
     }
     
+    // Get the day name for the selected date
     const dayName = getDayName(selectedDate);
-    // Get all slots for this day
-    const slots = availability.filter((slot: any) => slot.day.toLowerCase() === dayName.toLowerCase());
+    console.log(`DEBUG - Computing available times for ${format(selectedDate, 'yyyy-MM-dd')} (${dayName})`);
+    
+    // Get the unique day names in the data
+    const uniqueDays = Array.from(new Set(availability.map((slot: any) => slot.day)));
+    console.log("DEBUG - Unique day names in data:", uniqueDays);
+    
+    // Map of standard day names to indices for reference
+    const dayMap: Record<string, number> = {
+      "sunday": 0, 
+      "monday": 1, 
+      "tuesday": 2, 
+      "wednesday": 3, 
+      "thursday": 4, 
+      "friday": 5, 
+      "saturday": 6
+    };
+    
+    // Get all slots for this day - using case-insensitive comparison
+    const slots = availability.filter((slot: any) => {
+      if (!slot.day) return false;
+      
+      // Handle different casing of day names
+      const slotDayLower = typeof slot.day === 'string' ? slot.day.toLowerCase() : '';
+      const dayNameLower = dayName.toLowerCase();
+      const matches = slotDayLower === dayNameLower;
+      
+      console.log(`DEBUG - Comparing days: "${slot.day}" (${slotDayLower}) with "${dayName}" (${dayNameLower}) = ${matches}`);
+      
+      return matches;
+    });
+    
+    console.log(`DEBUG - Found ${slots.length} available slots for ${dayName}`);
+    
+    if (slots.length === 0) {
+      setAvailableTimes([]);
+      return;
+    }
+
     // Generate all 30-min intervals for all slots
     let allIntervals: string[] = [];
     slots.forEach((slot: any) => {
-      allIntervals = allIntervals.concat(generateIntervals(slot.startTime, slot.endTime));
+      const intervals = generateIntervals(slot.startTime, slot.endTime);
+      console.log(`Intervals for slot ${slot.startTime}-${slot.endTime}:`, intervals);
+      allIntervals = allIntervals.concat(intervals);
     });
+    
+    // Format selected date to match session date format 'YYYY-MM-DD'
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+    
     // Get booked times for this mentor on this date
     const bookedTimes = (sessions || [])
-      .filter((s: any) => s.mentorId === mentor.id && s.date === format(selectedDate, "yyyy-MM-dd"))
+      .filter((s: any) => 
+        s.mentorId === mentor.id && 
+        s.date === formattedDate && 
+        s.status !== 'rejected' && 
+        s.status !== 'canceled'
+      )
       .map((s: any) => s.time);
+    
+    console.log("Booked times:", bookedTimes);
+    
     // Return only intervals not already booked
     const available = allIntervals.filter((time: string) => !bookedTimes.includes(time));
+    console.log("Final available times:", available);
+    
     setAvailableTimes(available);
   }, [selectedDate, availability, sessions, mentor.id]);
   
@@ -147,6 +205,7 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
       mentorName: `${mentor.firstName} ${mentor.lastName}`
     };
     
+    console.log("Booking session with data:", sessionDataWithMeta);
     bookSessionMutation.mutate(sessionDataWithMeta);
   };
   
@@ -154,6 +213,13 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
     setShowSuccessModal(false);
     setShowTimeSelection(false);
     onClose();
+  };
+
+  const handleDateSelection = (date: Date) => {
+    console.log("Date selected:", date);
+    setSelectedDate(date);
+    setSelectedTime(undefined);
+    setShowTimeSelection(true);
   };
   
   return (
@@ -221,15 +287,23 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
               </div>
               
               <div className="md:w-2/3">
+                {/* Add debug info */}
+                {availabilityLoading && <div className="text-sm text-muted-foreground mb-2">Loading mentor availability...</div>}
+                {!availabilityLoading && availability && Array.isArray(availability) && (
+                  <div className="text-xs text-muted-foreground mb-2">
+                    {availability.length === 0 ? 
+                      "No availability configured for this mentor" :
+                      `Mentor is available on: ${availability.map((a: any) => a.day).join(', ')}`
+                    }
+                  </div>
+                )}
+                
                 <Calendar 
                   title={`Book time with ${mentor.firstName}`}
                   subtitle="Choose a date to see available times"
                   buttonText="Check Availability"
                   mentorId={mentor.id}
-                  onSelectDate={(date) => {
-                    setSelectedDate(date);
-                    setShowTimeSelection(true);
-                  }}
+                  onSelectDate={handleDateSelection}
                 />
               </div>
             </div>

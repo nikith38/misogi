@@ -95,7 +95,7 @@ export default function MenteeDashboard() {
               buttonText="Book Now"
               onBookNowClick={handleBookNowClick}
               mentorId={recommendedMentor?.id}
-              onSelectDate={() => {
+              onSelectDate={(date) => {
                 if (recommendedMentor) {
                   setSelectedMentorId(recommendedMentor.id);
                   setShowBookingModal(true);

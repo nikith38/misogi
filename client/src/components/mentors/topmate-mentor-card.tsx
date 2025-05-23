@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Calendar, Clock, ExternalLink, MessageCircle, Star, Verified } from "lucide-react";
+import { Calendar, Clock, ExternalLink, Star, Verified } from "lucide-react";
 import CalendarBookingModal from "./calendar-booking-modal";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";

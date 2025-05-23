@@ -62,7 +62,7 @@ export default function BookSession() {
     }
   };
   
-  const handleDateSelection = () => {
+  const handleDateSelection = (date: Date) => {
     if (selectedMentorId && mentor) {
       setShowBookingModal(true);
     }

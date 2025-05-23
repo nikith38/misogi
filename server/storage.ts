@@ -31,6 +31,7 @@ export interface IStorage {
   createSession(session: InsertSession): Promise<Session>;
   getSessionById(id: number): Promise<Session | undefined>;
   getSessionsForUser(userId: number, role: "mentor" | "mentee"): Promise<Session[]>;
+  getSessionsForMentor(mentorId: number): Promise<Session[]>;
   getUpcomingSessions(userId: number, role: "mentor" | "mentee"): Promise<Session[]>;
   getPendingSessionRequests(mentorId: number): Promise<Session[]>;
   approveSessionRequest(sessionId: number): Promise<Session | undefined>;
@@ -163,6 +164,13 @@ export class MemStorage implements IStorage {
     // Return only sessions specifically assigned to this user in their role
     return Array.from(this.sessions.values()).filter(
       session => role === "mentor" ? session.mentorId === userId : session.menteeId === userId
+    );
+  }
+
+  async getSessionsForMentor(mentorId: number): Promise<Session[]> {
+    // Get all sessions for this mentor regardless of who is logged in
+    return Array.from(this.sessions.values()).filter(
+      session => session.mentorId === mentorId
     );
   }
 

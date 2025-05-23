@@ -312,12 +312,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user?.id;
       const role = req.user?.role as "mentor" | "mentee";
+      const mentorIdParam = req.query.mentorId;
       
       if (!userId) {
         return res.status(401).json({ message: "User not authenticated" });
       }
       
-      const sessions = await storage.getSessionsForUser(userId, role);
+      let sessions;
+      if (mentorIdParam) {
+        // If mentorId is provided, get sessions for that specific mentor
+        // This is useful for the calendar component to show available slots
+        const mentorId = parseInt(mentorIdParam as string);
+        sessions = await storage.getSessionsForMentor(mentorId);
+      } else {
+        // Otherwise get sessions for the current user based on their role
+        sessions = await storage.getSessionsForUser(userId, role);
+      }
+      
       res.json(sessions);
     } catch (error) {
       res.status(500).json({ message: "Failed to get sessions" });

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { seed } from './seed';
 
 const app = express();
 app.use(express.json());
@@ -127,7 +128,14 @@ async function seedTestUsers() {
   // Use the PORT environment variable provided by Render or default to 5001
   // this serves both the API and the client.
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 5001;
-  server.listen(port, "0.0.0.0", () => {
+  server.listen(port, "0.0.0.0", async () => {
     log(`serving on port ${port}`);
+    
+    // Seed the database
+    try {
+      await seed();
+    } catch (error) {
+      console.error('Error seeding database:', error);
+    }
   });
 })();
