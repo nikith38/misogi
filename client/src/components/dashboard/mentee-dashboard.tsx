@@ -1,9 +1,10 @@
 import { useAuth } from "@/hooks/use-auth";
-import StatsOverview from "@/components/dashboard/stats-card";
+import MenteeStatsCard from "@/components/dashboard/mentee-stats-card";
 import UpcomingSessions from "@/components/dashboard/upcoming-sessions";
 import SkillsProgress from "@/components/dashboard/skills-progress";
 import ActivityFeed from "@/components/dashboard/activity-feed";
 import RecommendedMentors from "@/components/dashboard/recommended-mentors";
+import MenteeSessionsChart from "@/components/dashboard/mentee-sessions-chart";
 import { cn, getStaggeredDelay } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { DashboardCalendar } from "@/components/ui/dashboard-calendar";
@@ -45,7 +46,22 @@ export default function MenteeDashboard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <StatsOverview />
+        <MenteeStatsCard />
+        
+        {/* Analytics Chart */}
+        <div 
+          className="grid grid-cols-1 gap-6 mb-6"
+          style={{ transitionDelay: getStaggeredDelay(1) }}
+        >
+          <div 
+            className={cn(
+              "transition-all duration-300 transform-gpu",
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            )}
+          >
+            <MenteeSessionsChart />
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="md:col-span-2">
@@ -54,7 +70,7 @@ export default function MenteeDashboard() {
                 "transition-all duration-300 transform-gpu",
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}
-              style={{ transitionDelay: getStaggeredDelay(1) }}
+              style={{ transitionDelay: getStaggeredDelay(2) }}
             >
               <UpcomingSessions />
             </div>
@@ -65,7 +81,7 @@ export default function MenteeDashboard() {
                 "transition-all duration-300 transform-gpu",
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}
-              style={{ transitionDelay: getStaggeredDelay(2) }}
+              style={{ transitionDelay: getStaggeredDelay(3) }}
             >
               <RecommendedMentors />
             </div>
@@ -78,7 +94,7 @@ export default function MenteeDashboard() {
               "transition-all duration-300 transform-gpu",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
-            style={{ transitionDelay: getStaggeredDelay(3) }}
+            style={{ transitionDelay: getStaggeredDelay(4) }}
           >
             <SkillsProgress />
           </div>
@@ -87,7 +103,7 @@ export default function MenteeDashboard() {
               "transition-all duration-300 transform-gpu",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
-            style={{ transitionDelay: getStaggeredDelay(4) }}
+            style={{ transitionDelay: getStaggeredDelay(5) }}
           >
             <DashboardCalendar 
               title="Your Mentorship Calendar"
@@ -104,7 +120,7 @@ export default function MenteeDashboard() {
             "transition-all duration-300 transform-gpu",
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           )}
-          style={{ transitionDelay: getStaggeredDelay(5) }}
+          style={{ transitionDelay: getStaggeredDelay(6) }}
         >
           <ActivityFeed />
         </div>
