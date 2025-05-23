@@ -65,17 +65,31 @@ export function Calendar({
   mentorId,
   onSelectDate
 }: BookingCalendarProps) {
+  // Use a specific date for testing or demonstrating (May 2025 in this case)
+  // Could be replaced with props for month/year selection in the future
+  const targetYear = 2025;
+  const targetMonth = 4; // 0-indexed, so 4 = May
+  
+  // Use either the current date or a specific target date
+  // For example, we can force May 2025 for testing
   const currentDate = new Date();
+  currentDate.setFullYear(targetYear);
+  currentDate.setMonth(targetMonth);
+  
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
   const currentYear = currentDate.getFullYear();
   
-  // Correctly calculate first day of month and day of week
+  // Create a date for the first day of the month we're displaying
   const firstDayOfMonth = new Date(currentYear, currentDate.getMonth(), 1);
-  const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  // getDay() returns 0 for Sunday, 1 for Monday, etc.
+  const firstDayOfWeek = firstDayOfMonth.getDay();
   
-  console.log(`DEBUG - Current month: ${currentMonth} ${currentYear}`);
-  console.log(`DEBUG - First day of month: ${firstDayOfMonth.toDateString()}`);
-  console.log(`DEBUG - First day of week index: ${firstDayOfWeek}`);
+  console.log(`DEBUG - Calendar initialized for ${currentMonth} ${currentYear}`);
+  console.log(`DEBUG - First day (${currentMonth} 1, ${currentYear}) is a ${dayNames[firstDayOfWeek]} (index: ${firstDayOfWeek})`);
+  
+  // Verify: May 1, 2025 should be a Thursday (index 4)
+  const testDate = new Date(2025, 4, 1); // Month is 0-indexed, so 4 = May
+  console.log(`DEBUG - Test: May 1, 2025 is a ${dayNames[testDate.getDay()]} (index: ${testDate.getDay()})`);
   
   const daysInMonth = new Date(
     currentYear,
@@ -137,7 +151,7 @@ export function Calendar({
     const realDayNames = Array.from(new Set(availability.map((slot: any) => slot.day)));
     console.log("DEBUG - Unique day names in data:", realDayNames);
 
-    // Map of standard day names to their correct day indices (0 = Sunday, 1 = Monday, etc.)
+    // Map of standard day names to indices (0 = Sunday, 1 = Monday, etc.)
     const dayMap: Record<string, number> = {
       "sunday": 0, 
       "monday": 1, 
@@ -148,23 +162,26 @@ export function Calendar({
       "saturday": 6
     };
     
-    // Create an array of day indices when the mentor is available (0 = Sunday, 1 = Monday, etc.)
-    const availableDayIndices: number[] = [];
+    // First, create a structured map of the mentor's availability by day of week
+    // We'll use this to check which days the mentor actually has time slots on
+    const availabilityByDayIndex: Record<number, any[]> = {};
     
-    // First identify all the day indices the mentor is available
     availability.forEach((slot: any) => {
-      if (!slot.day) return;
-      
       const dayName = typeof slot.day === 'string' ? slot.day.toLowerCase() : '';
       const dayIndex = dayMap[dayName];
       
       console.log(`DEBUG - Processing day "${slot.day}" → lowercase: "${dayName}" → index: ${dayIndex}`);
       
-      if (dayIndex !== undefined && !availableDayIndices.includes(dayIndex)) {
-        availableDayIndices.push(dayIndex);
+      if (dayIndex !== undefined) {
+        if (!availabilityByDayIndex[dayIndex]) {
+          availabilityByDayIndex[dayIndex] = [];
+        }
+        availabilityByDayIndex[dayIndex].push(slot);
       }
     });
-
+    
+    // Get the indices of days when the mentor is available
+    const availableDayIndices = Object.keys(availabilityByDayIndex).map(Number);
     console.log("DEBUG - Available day indices:", availableDayIndices);
 
     // Now check which days in the current month match these weekday indices
@@ -183,26 +200,14 @@ export function Calendar({
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(currentYear, currentMonth, i);
       const dayIndex = date.getDay(); // 0-6 representing Sun-Sat
-      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
-      
-      console.log(`DEBUG - Day ${i} is a ${dayName} (index: ${dayIndex})`);
       
       // Skip if mentor isn't available on this day of the week
       if (!availableDayIndices.includes(dayIndex)) {
         continue;
       }
       
-      // Get slots for this day of the week
-      const daySlots = availability.filter((slot: any) => {
-        // Convert the slot's day name to its index
-        if (!slot.day) return false;
-        const slotDayName = typeof slot.day === 'string' ? slot.day.toLowerCase() : '';
-        const slotDayIndex = dayMap[slotDayName];
-        return slotDayIndex === dayIndex;
-      });
-      
-      console.log(`DEBUG - Day ${i} (${dayName}) matching slots: ${daySlots.length}`);
-      
+      // Get the slots for this day of the week
+      const daySlots = availabilityByDayIndex[dayIndex] || [];
       if (daySlots.length === 0) continue;
       
       // Format current date to match session date format 'YYYY-MM-DD'
@@ -278,37 +283,39 @@ export function Calendar({
   };
 
   const renderCalendarDays = () => {
+    // Debug info to verify layout correctness
+    console.log(`DEBUG - Calendar layout: First day of ${currentMonth} ${currentYear} is ${dayNames[firstDayOfWeek]} (index: ${firstDayOfWeek}), adding ${firstDayOfWeek} empty cells`);
+    
+    // Additional verification - print the weekday for each day in the month
+    for (let i = 1; i <= Math.min(daysInMonth, 7); i++) {
+      const date = new Date(currentYear, currentDate.getMonth(), i);
+      const dayOfWeek = date.getDay();
+      console.log(`DEBUG - ${currentMonth} ${i}, ${currentYear} is a ${dayNames[dayOfWeek]} (index: ${dayOfWeek})`);
+    }
+    
     let days: React.ReactNode[] = [
+      // Day headers SUN, MON, etc.
       ...dayNames.map((day, i) => (
         <CalendarDay key={`header-${day}`} day={day} isHeader />
       )),
-    ];
-    
-    // Debug the first day of week placement
-    console.log(`DEBUG - Placing ${firstDayOfWeek} empty cells before day 1`);
-    
-    // Add empty cells for days before the first day of month
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      days.push(
+      // Empty cells before first day of month
+      ...Array(firstDayOfWeek).fill(null).map((_, i) => (
         <div
           key={`empty-start-${i}`}
           className="col-span-1 row-span-1 h-8 w-8"
         />
-      );
-    }
-    
-    // Add the actual dates for the month
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(
+      )),
+      // Actual days of the month
+      ...Array(daysInMonth).fill(null).map((_, i) => (
         <CalendarDay 
-          key={`date-${i}`} 
-          day={i} 
-          isAvailable={availableDays.includes(i)}
-          isSelected={selectedDay === i}
-          onClick={() => handleDayClick(i)}
+          key={`date-${i + 1}`} 
+          day={i + 1} 
+          isAvailable={availableDays.includes(i + 1)}
+          isSelected={selectedDay === i + 1}
+          onClick={() => handleDayClick(i + 1)}
         />
-      );
-    }
+      )),
+    ];
 
     return days;
   };

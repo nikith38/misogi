@@ -56,8 +56,7 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
 
   // Helper to get day name from date
   const getDayName = (date: Date) => {
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return dayNames[getDay(date)];
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][getDay(date)];
   };
 
   // Helper to generate 30-minute intervals between two times ("HH:mm")
@@ -91,21 +90,8 @@ export default function CalendarBookingModal({ mentor, isOpen, onClose }: Calend
     const uniqueDays = Array.from(new Set(availability.map((slot: any) => slot.day)));
     console.log("DEBUG - Unique day names in data:", uniqueDays);
     
-    // Map of standard day names to indices for reference
-    const dayMap: Record<string, number> = {
-      "sunday": 0, 
-      "monday": 1, 
-      "tuesday": 2, 
-      "wednesday": 3, 
-      "thursday": 4, 
-      "friday": 5, 
-      "saturday": 6
-    };
-    
     // Get all slots for this day - using case-insensitive comparison
     const slots = availability.filter((slot: any) => {
-      if (!slot.day) return false;
-      
       // Handle different casing of day names
       const slotDayLower = typeof slot.day === 'string' ? slot.day.toLowerCase() : '';
       const dayNameLower = dayName.toLowerCase();
