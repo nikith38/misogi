@@ -66,7 +66,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
                   <DropdownMenuLabel className="font-normal text-gray-500 dark:text-gray-400 uppercase text-xs tracking-wider">
-                    FOR SEEKERS
+                    FOR MENTEES
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem 
@@ -92,7 +92,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
                   <DropdownMenuSeparator />
                   
                   <DropdownMenuLabel className="font-normal text-gray-500 dark:text-gray-400 uppercase text-xs tracking-wider">
-                    FOR EXPERTS
+                    FOR MENTORS
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem 
@@ -113,12 +113,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
                     >
                       Sign up
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Pricing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Start your page
-                    </DropdownMenuItem>
+
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -169,7 +164,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
           
           <div className="border-t border-gray-200 dark:border-gray-800 pt-2 pb-3">
             <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              For Seekers
+              For Mentees
             </div>
             <a
               href="#"
@@ -195,7 +190,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
           
           <div className="border-t border-gray-200 dark:border-gray-800 pt-2 pb-3">
             <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              For Experts
+              For Mentors
             </div>
             <a
               href="#"
@@ -217,20 +212,7 @@ export function TopMateNav({ onLoginClick, onSignUpClick }: TopMateNavProps) {
             >
               Sign up
             </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Start your page
-            </a>
+
           </div>
         </div>
       )}
