@@ -1,0 +1,75 @@
+1. Authentication & Authorization
+- Register a new Mentor account
+- Register a new Mentee account
+- Attempt to log in with incorrect credentials
+- Log in as Mentor and verify mentor-specific features are accessible
+- Log in as Mentee and verify mentee-specific features are accessible
+- Test password reset functionality
+- Attempt to access another user's sessions (should be denied)
+2. Profile & Availability Management
+- As a Mentor, set up your profile with expertise areas
+- Update your profile information and verify changes persist
+- Set weekly availability slots (try different time patterns)
+- Edit existing availability slots
+- Remove availability slots
+- Test timezone conversion for availability display
+- Toggle between Mentor/Mentee roles (if applicable)
+3. Session Request System
+- As a Mentee, browse available Mentors
+- Filter Mentors by expertise or availability
+- Request a session with specific notes
+- Request a session outside available hours (should be prevented)
+- As a Mentor, view incoming requests
+- Approve a session request
+- Decline a session request with reason
+- Cancel an already approved session (test from both roles)
+- Reschedule an existing session
+4. Calendar Integration
+- Verify approved sessions appear on both users' calendars
+- Test calendar week/month view toggle
+- Check session details from calendar view
+- Verify timezone adjustments work correctly
+- Test calendar notifications/reminders (if implemented)
+- Verify past sessions are properly marked
+- Export calendar items to iCal/Google Calendar (if implemented)
+5. Video Meeting Integration
+- Click "Join Session" when session time arrives
+- Test Google Meet integration
+- Verify unique meeting URLs are generated
+- Test early access to meeting room (if allowed)
+- Check post-meeting link expiration
+- Test meeting reminders
+- Verify meeting links in email notifications
+6. Feedback System
+- Submit Mentee feedback after session completion
+- Submit Mentor feedback after session completion
+- Test rating validation (only 1-5 stars allowed)
+- Verify feedback visibility restrictions (only visible to participants)
+- Edit feedback within allowed timeframe (if implemented)
+- Test anonymous feedback option (if implemented)
+7. Analytics & Reporting
+- View personal session history as Mentor
+- View personal session history as Mentee
+- Check average ratings display
+- Verify session count metrics
+- Test date range filters for analytics
+- Examine sessions-per-week graph functionality
+- Export reports/analytics (if implemented)
+8. Edge Cases & Error Handling
+- Schedule concurrent sessions (if permitted)
+- Request session with fully booked Mentor
+- Submit incomplete forms (should show validation errors)
+- Test session handling across day/month boundaries
+- Schedule very short/long sessions (test duration limits)
+- Test system behavior during maintenance windows
+- Verify data persistence after logout/login cycles
+9. Performance Testing
+- Load multiple sessions in calendar view
+- Test application response with many concurrent users
+- Check page load times with various network conditions
+- Verify mobile responsiveness for all core features
+10. Integration & End-to-End Workflows
+- Complete full cycle: request → approval → meeting → feedback
+- Test notification systems throughout the workflow
+- Verify email delivery for important events
+- Test multi-session management for busy Mentors/Mentees
